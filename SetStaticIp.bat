@@ -1,6 +1,5 @@
 @ECHO OFF
-test 2.0
-:: BatchGotAdmin
+REM --> BatchGotAdmin
 :-------------------------------------
 REM  --> Check for permissions
     IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
@@ -27,7 +26,6 @@ if '%errorlevel%' NEQ '0' (
 :gotAdmin
     pushd "%CD%"
     CD /D "%~dp0"
-
 REM  --> Running /ipconfig
 ECHO "--------Lets set run ipconfig /all--------"
 PAUSE
@@ -49,35 +47,33 @@ echo "Default gateway configured as:" %Defaultgateway%!
 set /P namedevice="What is the name of your "internet device" (ethernet or wi-fi)?"
 echo "name device configured as:" %namedevice%!
 
+echo %IP4% %Subnetmask% %Defaultgateway% %namedevice%
 REM  --> Setup DNS and alternate DNS
 ECHO "--------What is your prefered DNS? We advise to use 1.1.1.1--------"
 ECHO "Would you like to use advised settings? Type yes or Y"
 set /P DNSANSWER="Would you like to use advised settings? Type yes or Y if not type not or N"
-if '%DNSANSWER%' = Yes || '%DNSANSWER%' = Y || '%DNSANSWER%' = y || '%DNSANSWER%' = yes (
+if '%DNSANSWER%' =Yes|| '%DNSANSWER%'=Y||'%DNSANSWER%'=y||'%DNSANSWER%'=yes
 	set /P DNS="1.1.1.1"
-	set /P DNSalter="1.0.0.1"
-) 
-if '%DNSANSWER%' = No || '%DNSANSWER%' = N || '%DNSANSWER%' = n || '%DNSANSWER%' = no ( 
+	set /P DNSalter="1.0.0.1" 
+if '%DNSANSWER%' = No || '%DNSANSWER%' = N || '%DNSANSWER%' = n || '%DNSANSWER%' = no 
 	set /P DNS="Type your custom DNS server"
 	echo custom DNS server configured as: %DNS%!
 	set /P DNSalter="Type your alternative custom DNS server"
 	echo alternative custom DNS server configured as: %DNSalter%!
-)
 
 REM  --> Execute commands
 ECHO "--------All configurations have been set-----------"
 set /P RUNANSWER="--------Type run to execute command-----------"
-if '%RUNANSWER%' = run || '%RUNANSWER%' = run (
+if '%RUNANSWER%' = run || '%RUNANSWER%' = run
 	ECHO "netsh interface ip set address name="%namedevice%" static %IP4% %Subnetmask% %Defaultgateway%"
-	netsh interface ip set address name="%namedevice%" static %IP4% %Subnetmask% %Defaultgateway%
+::	netsh interface ip set address name="%namedevice%" static %IP4% %Subnetmask% %Defaultgateway%
 	ECHO "netsh interface ip set dns name="%namedevice%" static %DNS%"
-	netsh interface ip set dns name="%namedevice%" static %DNS%
+::	netsh interface ip set dns name="%namedevice%" static %DNS%
 	ECHO "netsh interface ip add dns name="%namedevice%" %DNSalter% index=2"
-	netsh interface ip add dns name="%namedevice%" %DNSalter% index=2
+::	netsh interface ip add dns name="%namedevice%" %DNSalter% index=2
 	COLOR 2F
 	ECHO "SETUP COMPLEET you can close this window now"
-)
-else(
+ELSE (
 	ECHO "Faulty command try again"
 	
 	)
